@@ -1,0 +1,81 @@
+<dmn:definitions xmlns:dmn="http://www.omg.org/spec/DMN/20180521/MODEL/" xmlns="https://kiegroup.org/dmn/_28B07541-BCAA-4D8D-B754-05ED035496BA" xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/" xmlns:kie="http://www.drools.org/kie/dmn/1.2" xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/" xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" id="_905E3E6C-C346-4DA3-AA28-9ED076578E03" name="MortgageApproval" typeLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/" namespace="https://kiegroup.org/dmn/_28B07541-BCAA-4D8D-B754-05ED035496BA">
+  <dmn:extensionElements/>
+  <dmn:inputData id="_23558138-A90D-4685-9B08-1ABD1DDD0A2A" name="amount">
+    <dmn:extensionElements/>
+    <dmn:variable id="_F42026F3-B207-41FF-8177-9954910B16A7" name="amount"/>
+  </dmn:inputData>
+  <dmn:decision id="_B0928930-EC40-4726-B8B1-4D9D5AEF1C82" name="mortgageApproved">
+    <dmn:extensionElements/>
+    <dmn:variable id="_C54E9DA3-878C-4713-B790-606CB9C01721" name="mortgageApproved" typeRef="boolean"/>
+    <dmn:informationRequirement id="_AF4E07ED-DE25-4E44-BB37-3FDF52056005">
+      <dmn:requiredInput href="#_23558138-A90D-4685-9B08-1ABD1DDD0A2A"/>
+    </dmn:informationRequirement>
+    <dmn:decisionTable id="_1D72E97A-473F-460A-A2F1-6602AF93FE3B" hitPolicy="FIRST" preferredOrientation="Rule-as-Row">
+      <dmn:input id="_3E5D7B3E-6C23-46B0-B385-2362EEB99ADB">
+        <dmn:inputExpression id="_D4F176DB-19F7-4B89-A1C6-57C126B9C4C3" typeRef="number">
+          <dmn:text>amount</dmn:text>
+        </dmn:inputExpression>
+      </dmn:input>
+      <dmn:output id="_2F517F3D-D449-4AAF-B150-B8DF82E3A1C3"/>
+      <dmn:annotation name="Description"/>
+      <dmn:rule id="_8C26AAB7-6CCE-4BD3-9F40-A0B7F0CC3848">
+        <dmn:inputEntry id="_7E7C0CAF-CDCA-4313-BDA9-EE13BCA8CB84">
+          <dmn:text>&lt;5000</dmn:text>
+        </dmn:inputEntry>
+        <dmn:outputEntry id="_67260421-5E3A-4131-BB54-8ACA4B36B2C3">
+          <dmn:text>true</dmn:text>
+        </dmn:outputEntry>
+        <dmn:annotationEntry>
+          <dmn:text>Less than 5000 is OK</dmn:text>
+        </dmn:annotationEntry>
+      </dmn:rule>
+      <dmn:rule id="_55C03D40-47FF-43D9-A15E-B08E5C53AE0E">
+        <dmn:inputEntry id="_07A49F5D-8932-441D-8AF7-59C93E7E5752">
+          <dmn:text>&gt;=5000</dmn:text>
+        </dmn:inputEntry>
+        <dmn:outputEntry id="_ABECCAE3-5CEA-45CC-B111-E504B0947318">
+          <dmn:text>false</dmn:text>
+        </dmn:outputEntry>
+        <dmn:annotationEntry>
+          <dmn:text>5000 and more is too much</dmn:text>
+        </dmn:annotationEntry>
+      </dmn:rule>
+    </dmn:decisionTable>
+  </dmn:decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="_18B53C8E-F1CA-40CC-B2FF-4310382BDF60" name="DRG">
+      <di:extension>
+        <kie:ComponentsWidthsExtension>
+          <kie:ComponentWidths dmnElementRef="_1D72E97A-473F-460A-A2F1-6602AF93FE3B">
+            <kie:width>50</kie:width>
+            <kie:width>100</kie:width>
+            <kie:width>190</kie:width>
+            <kie:width>355</kie:width>
+          </kie:ComponentWidths>
+        </kie:ComponentsWidthsExtension>
+      </di:extension>
+      <dmndi:DMNShape id="dmnshape-drg-_23558138-A90D-4685-9B08-1ABD1DDD0A2A" dmnElementRef="_23558138-A90D-4685-9B08-1ABD1DDD0A2A" isCollapsed="false">
+        <dmndi:DMNStyle>
+          <dmndi:FillColor red="255" green="255" blue="255"/>
+          <dmndi:StrokeColor red="0" green="0" blue="0"/>
+          <dmndi:FontColor red="0" green="0" blue="0"/>
+        </dmndi:DMNStyle>
+        <dc:Bounds x="281" y="266" width="100" height="50"/>
+        <dmndi:DMNLabel/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="dmnshape-drg-_B0928930-EC40-4726-B8B1-4D9D5AEF1C82" dmnElementRef="_B0928930-EC40-4726-B8B1-4D9D5AEF1C82" isCollapsed="false">
+        <dmndi:DMNStyle>
+          <dmndi:FillColor red="255" green="255" blue="255"/>
+          <dmndi:StrokeColor red="0" green="0" blue="0"/>
+          <dmndi:FontColor red="0" green="0" blue="0"/>
+        </dmndi:DMNStyle>
+        <dc:Bounds x="255" y="108" width="154" height="72"/>
+        <dmndi:DMNLabel/>
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="dmnedge-drg-_AF4E07ED-DE25-4E44-BB37-3FDF52056005" dmnElementRef="_AF4E07ED-DE25-4E44-BB37-3FDF52056005">
+        <di:waypoint x="331" y="291"/>
+        <di:waypoint x="332" y="180"/>
+      </dmndi:DMNEdge>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</dmn:definitions>
