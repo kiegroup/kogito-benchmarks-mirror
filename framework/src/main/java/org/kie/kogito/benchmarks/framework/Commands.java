@@ -47,6 +47,7 @@ public class Commands {
     private static final Logger LOGGER = Logger.getLogger(Commands.class.getName());
 
     public static final String BASE_DIR = getBaseDir();
+    public static final String APPS_DIR = getAppsDir();
     public static final String MVNW = Commands.isThisWindows ? "mvnw.cmd" : "./mvnw";
     public static final boolean isThisWindows = System.getProperty("os.name").matches(".*[Ww]indows.*");
     private static final Pattern numPattern = Pattern.compile("[ \t]*[0-9]+[ \t]*");
@@ -136,15 +137,26 @@ public class Commands {
     }
 
     public static String getBaseDir() {
-        String env = System.getenv().get("basedir");
-        String sys = System.getProperty("basedir");
-        if (StringUtils.isNotBlank(env)) {
-            return new File(env).getParent();
+        String baseDirValue = getSystemPropertyOrEnvVarValue("basedir");
+        return new File(baseDirValue).getParent();
+    }
+
+    public static String getAppsDir() {
+        return getSystemPropertyOrEnvVarValue("appsDir");
+    }
+
+    private static String getSystemPropertyOrEnvVarValue(String name) {
+        String systemPropertyValue = System.getProperty(name);
+        if (StringUtils.isNotBlank(systemPropertyValue)) {
+            return systemPropertyValue;
         }
-        if (StringUtils.isBlank(sys)) {
-            throw new IllegalArgumentException("Unable to determine project.basedir.");
+
+        String envPropertyValue = System.getenv(name);
+
+        if (StringUtils.isBlank(envPropertyValue)) {
+            throw new IllegalArgumentException("Unable to determine the value of the property " + name);
         }
-        return new File(sys).getParent();
+        return envPropertyValue;
     }
 
     public static String getCodeQuarkusURL() {
@@ -178,13 +190,13 @@ public class Commands {
     }
 
     public static void cleanTarget(App app) {
-        String target = BASE_DIR + File.separator + app.dir + File.separator + "target";
-        String logs = BASE_DIR + File.separator + app.dir + File.separator + "logs";
+        String target = APPS_DIR + File.separator + app.dir + File.separator + "target";
+        String logs = APPS_DIR + File.separator + app.dir + File.separator + "logs";
         cleanDirOrFile(target, logs);
     }
 
     public static BuildResult buildApp(App app, String methodName, String className, StringBuilder whatIDidReport) throws InterruptedException {
-        File appDir = app.getAppDir(BASE_DIR);
+        File appDir = app.getAppDir();
         File buildLogA = new File(appDir.getAbsolutePath() + File.separator + "logs" + File.separator + app.mavenCommands.name().toLowerCase() + "-build.log");
         ExecutorService buildService = Executors.newFixedThreadPool(1);
 
@@ -207,7 +219,7 @@ public class Commands {
     }
 
     public static RunInfo startApp(App app, StringBuilder whatIDidReport) throws IOException, InterruptedException {
-        File appDir = app.getAppDir(BASE_DIR);
+        File appDir = app.getAppDir();
         File runLogA = new File(appDir.getAbsolutePath() + File.separator + "logs" + File.separator + app.mavenCommands.name().toLowerCase() + "-run.log");
         List<String> cmd = getRunCommand(app.mavenCommands.mvnCmds[1]);
         appendln(whatIDidReport, appDir.getAbsolutePath());
@@ -448,7 +460,7 @@ public class Commands {
             if (isThisWindows) {
                 if (!force) {
                     Process p = Runtime.getRuntime().exec(new String[] {
-                            BASE_DIR + File.separator + "testsuite" + File.separator + "src" + File.separator + "it" + File.separator + "resources" + File.separator +
+                            BASE_DIR + File.separator + "framework" + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator +
                                     "CtrlC.exe ",
                             Long.toString(pid) });
                     p.waitFor(1, TimeUnit.MINUTES);

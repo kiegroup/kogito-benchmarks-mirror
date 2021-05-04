@@ -2,30 +2,17 @@ package org.kie.kogito.benchmarks;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
-import java.util.stream.Collectors;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.assertj.core.api.Assertions;
@@ -40,7 +27,6 @@ import org.kie.kogito.benchmarks.framework.MvnCmds;
 import org.kie.kogito.benchmarks.framework.RunInfo;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.kie.kogito.benchmarks.framework.Commands.BASE_DIR;
 import static org.kie.kogito.benchmarks.framework.Commands.buildApp;
 import static org.kie.kogito.benchmarks.framework.Commands.cleanTarget;
 import static org.kie.kogito.benchmarks.framework.Commands.getOpenedFDs;
@@ -73,7 +59,7 @@ public abstract class AbstractTemplateTest {
         File buildLogA = null;
         File runLogA = null;
         StringBuilder whatIDidReport = new StringBuilder();
-        File appDir = app.getAppDir(BASE_DIR);
+        File appDir = app.getAppDir();
         MvnCmds mvnCmds = app.mavenCommands;
         String cn = testInfo.getTestClass().get().getCanonicalName();
         String mn = testInfo.getTestMethod().get().getName();
@@ -193,7 +179,7 @@ public abstract class AbstractTemplateTest {
         File buildLogA = null;
         File runLogA = null;
         StringBuilder whatIDidReport = new StringBuilder();
-        File appDir = app.getAppDir(BASE_DIR);
+        File appDir = app.getAppDir();
         MvnCmds mvnCmds = app.mavenCommands;
         String cn = testInfo.getTestClass().get().getCanonicalName();
         String mn = testInfo.getTestMethod().get().getName();
@@ -302,8 +288,6 @@ public abstract class AbstractTemplateTest {
             long endTime = System.currentTimeMillis();
 
             System.out.println("First response time: " + values.get(0));
-            System.out.println("Second response time: " + values.get(1));
-            System.out.println("Third response time: " + values.get(2));
             System.out.println("Average response time: " + values.stream().mapToLong(Long::longValue).skip(1).average());
             System.out.println("Total duration: " + (endTime - startTime));
 
