@@ -10,7 +10,7 @@ import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
 
-import static org.kie.kogito.benchmarks.framework.Commands.BASE_DIR;
+import static org.kie.kogito.benchmarks.framework.Commands.APPS_DIR;
 
 public enum App {
     SAMPLE_KOGITO_APP_QUARKUS_JVM("sample-kogito-app", MvnCmds.QUARKUS_JVM, URLContent.SAMPLE_KOGITO_APP, WhitelistLogLines.SAMPLE_KOGITO_APP),
@@ -30,7 +30,7 @@ public enum App {
         this.mavenCommands = mavenCommands;
         this.urlContent = urlContent;
         this.whitelistLogLines = whitelistLogLines;
-        File tpFile = new File(BASE_DIR + File.separator + dir + File.separator + "threshold.properties");
+        File tpFile = new File(APPS_DIR + File.separator + dir + File.separator + "threshold.properties");
         String appDirNormalized = dir.toUpperCase().replace('-', '_') + "_";
         try (InputStream input = new FileInputStream(tpFile)) {
             Properties props = new Properties();
@@ -55,7 +55,7 @@ public enum App {
         }
     }
 
-    public File getAppDir(String parent) {
-        return new File(parent + File.separator + dir);
+    public File getAppDir() {
+        return new File(APPS_DIR, dir);
     }
 }

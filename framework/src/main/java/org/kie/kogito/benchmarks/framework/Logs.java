@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
@@ -230,8 +229,7 @@ public class Logs {
     }
 
     public static Path getLogsDir() throws IOException {
-        Path destDir = new File(BASE_DIR + File.separator + "testsuite" + File.separator + "target" +
-                File.separator + "archived-logs").toPath();
+        Path destDir = new File(BASE_DIR + File.separator + "tests" + File.separator + "archived-logs").toPath();
         Files.createDirectories(destDir);
         return destDir;
     }
@@ -253,7 +251,7 @@ public class Logs {
 
         List<String> lines = Files.lines(path).collect(Collectors.toCollection(ArrayList::new));
         String currentHeader = lines.get(0);
-        String headerWithoutAppAndMode = Arrays.stream(log.headerCSV.split(",")).skip(2).collect(Collectors.joining(","));
+        String headerWithoutAppAndMode = stripAppAndModeColumns(log.headerCSV);
         if (!currentHeader.contains(headerWithoutAppAndMode)) {
             lines.set(0, currentHeader + "," + headerWithoutAppAndMode);
             currentHeader = lines.get(0);
@@ -264,7 +262,7 @@ public class Logs {
         long headerLength = currentHeader.chars().filter(value -> value == ',').count();
         long lastLineLength = lastLine.chars().filter(value -> value == ',').count();
         if (lastLineLength < headerLength) {
-            String newDataWithoutAppAndMode = Arrays.stream(log.lineCSV.split(",")).skip(2).collect(Collectors.joining(","));
+            String newDataWithoutAppAndMode = stripAppAndModeColumns(log.lineCSV);
             lines.set(lines.size() - 1, lastLine + "," + newDataWithoutAppAndMode);
         } else {
             lines.add(log.lineCSV);
@@ -273,6 +271,11 @@ public class Logs {
         Files.write(path, (lines.stream().collect(Collectors.joining(System.lineSeparator())) + System.lineSeparator()).getBytes());
 
         LOGGER.info("\n" + log.headerCSV + "\n" + log.lineCSV);
+    }
+
+    private static String stripAppAndModeColumns(String line) {
+        int secondOccurrence = line.indexOf(",", line.indexOf(",") + 1);
+        return line.substring(secondOccurrence + 1);
     }
 
     /**

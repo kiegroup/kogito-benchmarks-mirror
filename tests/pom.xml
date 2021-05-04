@@ -15,6 +15,10 @@
   <name></name>
   <description></description>
 
+  <properties>
+    <appsDir>${project.parent.basedir}/</appsDir>
+  </properties>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -37,5 +41,18 @@
       <version>4.5.13</version>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <systemPropertyVariables>
+            <appsDir>${appsDir}</appsDir>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
