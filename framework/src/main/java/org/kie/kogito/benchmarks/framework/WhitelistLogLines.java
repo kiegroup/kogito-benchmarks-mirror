@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
  * @author Michal Karm Babacek <karm@redhat.com>
  */
 public enum WhitelistLogLines {
-    SAMPLE_KOGITO_APP(new Pattern[] { Pattern.compile(".*") }),
+    EVERYTHING(new Pattern[] { Pattern.compile(".*") }),
     JAX_RS_MINIMAL(new Pattern[] {
             // Some artifacts names...
             Pattern.compile(".*maven-error-diagnostics.*"),

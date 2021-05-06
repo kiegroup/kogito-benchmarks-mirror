@@ -11,13 +11,16 @@ import java.util.List;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.assertj.core.api.Assertions;
 import org.jboss.logging.Logger;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.kie.kogito.benchmarks.framework.App;
 import org.kie.kogito.benchmarks.framework.BuildResult;
 import org.kie.kogito.benchmarks.framework.HTTPRequestInfo;
@@ -173,7 +176,7 @@ public abstract class AbstractTemplateTest {
     }
 
     public void loadTest(TestInfo testInfo, App app, HTTPRequestInfo requestInfo) throws IOException, InterruptedException {
-        LOGGER.info("Testing app startStop: " + app.toString() + ", mode: " + app.mavenCommands.toString());
+        LOGGER.info("Testing app loadTest: " + app.toString() + ", mode: " + app.mavenCommands.toString());
 
         Process pA = null;
         File buildLogA = null;
@@ -265,31 +268,29 @@ public abstract class AbstractTemplateTest {
 
 
             // Apache HTTP Client 4
-            long startTime;
+            long totalDuration;
+            long firstResponseTime;
             try (CloseableHttpClient client = HttpClients.createDefault()){
                 HttpPost postRequest = new HttpPost(requestInfo.getURI());
                 postRequest.setEntity(new StringEntity(requestInfo.getBody()));
                 requestInfo.getHeaders().forEach(postRequest::setHeader);
 
-                startTime = System.currentTimeMillis();
-                for (int i = 0; i < 20000; i++) {
-                    long requestStartTime = System.nanoTime();
-                    try (CloseableHttpResponse response = client.execute(postRequest)) {
-                        Assertions.assertThat(response.getStatusLine().getStatusCode()).isEqualTo(requestInfo.getExpectedResponseStatusCode());
-//                        System.out.println("Response code: " + response.getStatusLine().getStatusCode());
-//                        System.out.println("Page is: " + EntityUtils.toString(response.getEntity()));
-                        EntityUtils.consume(response.getEntity());
-                    }
-                    long requestEndTime = System.nanoTime();
-                    long duration = requestEndTime - requestStartTime;
-                    values.add(duration);
-                }
-            }
-            long endTime = System.currentTimeMillis();
+                // Warm up run
+                runRequests(client, postRequest, 1000, requestInfo.getExpectedResponseStatusCode(), values);
 
-            System.out.println("First response time: " + values.get(0));
-            System.out.println("Average response time: " + values.stream().mapToLong(Long::longValue).skip(1).average());
-            System.out.println("Total duration: " + (endTime - startTime));
+                firstResponseTime = values.get(0);
+                values.clear();
+
+                // Measurements run
+                long startTime = System.currentTimeMillis();
+                runRequests(client, postRequest, 20000, requestInfo.getExpectedResponseStatusCode(), values);
+                long endTime = System.currentTimeMillis();
+                totalDuration = endTime - startTime;
+            }
+
+            System.out.println("First response time: " + firstResponseTime);
+            System.out.println("Average response time: " + values.stream().mapToLong(Long::longValue).average());
+            System.out.println("Total duration: " + totalDuration);
 
             long rssKbFinal = getRSSkB(pA.pid());
             long openedFiles = getOpenedFDs(pA.pid()); // TODO also do before the "test" itself?
@@ -345,6 +346,21 @@ public abstract class AbstractTemplateTest {
             writeReport(cn, mn, whatIDidReport.toString());
             //cleanTarget(app);
 
+        }
+    }
+
+    private void runRequests(CloseableHttpClient client, HttpUriRequest request, int count, int expectedResponseStatusCode, List<Long> values) throws IOException {
+        for (int i = 0; i < count; i++) {
+            long requestStartTime = System.nanoTime();
+            try (CloseableHttpResponse response = client.execute(request)) {
+                Assertions.assertThat(response.getStatusLine().getStatusCode()).isEqualTo(expectedResponseStatusCode);
+//                        System.out.println("Response code: " + response.getStatusLine().getStatusCode());
+//                        System.out.println("Page is: " + EntityUtils.toString(response.getEntity()));
+                EntityUtils.consume(response.getEntity());
+            }
+            long requestEndTime = System.nanoTime();
+            long duration = requestEndTime - requestStartTime;
+            values.add(duration);
         }
     }
 

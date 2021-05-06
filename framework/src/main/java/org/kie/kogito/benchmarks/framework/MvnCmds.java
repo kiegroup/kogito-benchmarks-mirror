@@ -7,12 +7,16 @@ import static org.kie.kogito.benchmarks.framework.Commands.getQuarkusNativePrope
 
 public enum MvnCmds {
     QUARKUS_JVM(new String[][] {
-            new String[] { "mvn", "clean", "package", /* "quarkus:build", */"-Dquarkus.package.output-name=quarkus" },
+            new String[] { "mvn", "clean", "package", "-Dquarkus.package.output-name=quarkus" },
             new String[] { "java", "-jar", "target/quarkus-runner.jar" }
     }),
-    SPRING_BOOT_JVM(new String[][] {
-            new String[] { "mvn", "clean", "package", /* "quarkus:build", */"-Dquarkus.package.output-name=quarkus" },
-            new String[] { "java", "-jar", "target/quarkus-runner.jar" }
+    SPRING_BOOT_02_JVM(new String[][] {
+            new String[] { "mvn", "clean", "package" }, // There is no possibility of changing the final name of the artifact
+            new String[] { "java", "-jar", "target/smarthouse-02-springboot-1.0-SNAPSHOT.jar" }
+    }),
+    SPRING_BOOT_03_JVM(new String[][] {
+            new String[] { "mvn", "clean", "package" },
+            new String[] { "java", "-jar", "target/smarthouse-03-springboot-1.0-SNAPSHOT.jar" }
     }),
     DEV(new String[][] {
             new String[] { "mvn", "clean", "quarkus:dev", "-Dmaven.repo.local=" + getLocalMavenRepoDir() }
