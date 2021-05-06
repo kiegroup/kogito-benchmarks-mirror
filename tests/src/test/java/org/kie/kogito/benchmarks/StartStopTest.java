@@ -187,7 +187,7 @@ public class StartStopTest {
 
     @Test
     public void kogito(TestInfo testInfo) throws IOException, InterruptedException {
-        testRuntime(testInfo, App.SAMPLE_KOGITO_APP_QUARKUS_JVM, MvnCmds.QUARKUS_JVM);
+        testRuntime(testInfo, App.SMARTHOUSE_02_QUARKUS_JVM, MvnCmds.QUARKUS_JVM);
     }
 
     //    @Test

@@ -8,7 +8,7 @@ import org.kie.kogito.benchmarks.framework.App;
 
 public class QuarkusSmallTest extends AbstractTemplateTest {
 
-    private static final App APP_TO_TEST = App.SAMPLE_KOGITO_APP_QUARKUS_JVM;
+    private static final App APP_TO_TEST = App.SMARTHOUSE_02_QUARKUS_JVM;
 
     @Test
     public void startStop(TestInfo testInfo) throws IOException, InterruptedException {

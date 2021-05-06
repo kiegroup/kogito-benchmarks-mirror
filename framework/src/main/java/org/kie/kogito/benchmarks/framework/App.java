@@ -1,11 +1,12 @@
 package org.kie.kogito.benchmarks.framework;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
@@ -13,11 +14,11 @@ import org.apache.commons.lang3.StringUtils;
 import static org.kie.kogito.benchmarks.framework.Commands.APPS_DIR;
 
 public enum App {
-    SAMPLE_KOGITO_APP_QUARKUS_JVM("sample-kogito-app", MvnCmds.QUARKUS_JVM, URLContent.SAMPLE_KOGITO_APP, WhitelistLogLines.SAMPLE_KOGITO_APP),
-    SAMPLE_KOGITO_APP_SPRING_BOOT("sample-kogito-app", MvnCmds.SPRING_BOOT_JVM, URLContent.SAMPLE_KOGITO_APP, WhitelistLogLines.SAMPLE_KOGITO_APP);
-    //    JAX_RS_MINIMAL("app-jax-rs-minimal", URLContent.JAX_RS_MINIMAL, WhitelistLogLines.JAX_RS_MINIMAL),
-    //    FULL_MICROPROFILE("app-full-microprofile", URLContent.FULL_MICROPROFILE, WhitelistLogLines.FULL_MICROPROFILE),
-    //    GENERATED_SKELETON("app-generated-skeleton", URLContent.GENERATED_SKELETON, WhitelistLogLines.GENERATED_SKELETON);
+    SMARTHOUSE_02_QUARKUS_JVM("smarthouse-02-quarkus", MvnCmds.QUARKUS_JVM, URLContent.SMARTHOUSE_02, WhitelistLogLines.EVERYTHING),
+    SMARTHOUSE_03_QUARKUS_JVM("smarthouse-03-quarkus", MvnCmds.QUARKUS_JVM, URLContent.SMARTHOUSE_03, WhitelistLogLines.EVERYTHING),
+
+    SMARTHOUSE_02_SPRING_BOOT("smarthouse-02-springboot", MvnCmds.SPRING_BOOT_02_JVM, URLContent.SMARTHOUSE_02, WhitelistLogLines.EVERYTHING),
+    SMARTHOUSE_03_SPRING_BOOT("smarthouse-03-springboot", MvnCmds.SPRING_BOOT_03_JVM, URLContent.SMARTHOUSE_03, WhitelistLogLines.EVERYTHING);
 
     public final String dir;
     public final MvnCmds mavenCommands;
@@ -30,9 +31,12 @@ public enum App {
         this.mavenCommands = mavenCommands;
         this.urlContent = urlContent;
         this.whitelistLogLines = whitelistLogLines;
-        File tpFile = new File(APPS_DIR + File.separator + dir + File.separator + "threshold.properties");
+
+        String tpFilePath = "/" + dir + "/threshold.properties";
+        URL tpFile = Optional.ofNullable(App.class.getResource(tpFilePath))
+                .orElseThrow(() -> new RuntimeException("Couldn't find " + tpFilePath));
         String appDirNormalized = dir.toUpperCase().replace('-', '_') + "_";
-        try (InputStream input = new FileInputStream(tpFile)) {
+        try (InputStream input = tpFile.openStream()) {
             Properties props = new Properties();
             props.load(input);
             for (String pn : props.stringPropertyNames()) {
@@ -51,7 +55,7 @@ public enum App {
             throw new IllegalArgumentException("Check threshold.properties and Sys and Env variables (upper case, underscores instead of dots). " +
                     "All values are expected to be of type long.");
         } catch (IOException e) {
-            throw new RuntimeException("Couldn't find " + tpFile.getAbsolutePath());
+            throw new RuntimeException("Couldn't read " + tpFilePath);
         }
     }
 

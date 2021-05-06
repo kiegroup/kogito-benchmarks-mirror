@@ -90,4 +90,69 @@ public class HTTPRequestInfo {
 
     }
 
+    public static class Body {
+        public static final String HEATING_02 = "{\n" +
+                "  \"Sensors Temperature\": [\n" +
+                "    {\n" +
+                "      \"placement\": \"OUTSIDE\",\n" +
+                "      \"current\": 25,\n" +
+                "      \"previous\": [\n" +
+                "        24,\n" +
+                "        23,\n" +
+                "        19,\n" +
+                "        16,\n" +
+                "        15,\n" +
+                "        11\n" +
+                "      ]\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"placement\": \"INSIDE\",\n" +
+                "      \"current\": 24.9,\n" +
+                "      \"previous\": [\n" +
+                "        25,\n" +
+                "        28,\n" +
+                "        28,\n" +
+                "        28,\n" +
+                "        28,\n" +
+                "        28\n" +
+                "      ]\n" +
+                "    }\n" +
+                "  ],\n" +
+                "  \"Settings Temperature\": {\n" +
+                "    \"threshold_low\": 21,\n" +
+                "    \"threshold_high\": 24\n" +
+                "  },\n" +
+                "  \"Settings Humidity\": {\n" +
+                "    \"threshold_low\": 0,\n" +
+                "    \"threshold_high\": 0\n" +
+                "  },\n" +
+                "  \"Sensors Humidity\": [\n" +
+                "    {\n" +
+                "      \"placement\": \"OUTSIDE\",\n" +
+                "      \"current\": 0,\n" +
+                "      \"previous\": [\n" +
+                "        0,\n" +
+                "        0,\n" +
+                "        0,\n" +
+                "        0,\n" +
+                "        0,\n" +
+                "        0\n" +
+                "      ]\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"placement\": \"INSIDE\",\n" +
+                "      \"current\": 0,\n" +
+                "      \"previous\": [\n" +
+                "        0,\n" +
+                "        0,\n" +
+                "        0,\n" +
+                "        0,\n" +
+                "        0,\n" +
+                "        0\n" +
+                "      ]\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}";
+    }
+
 }
