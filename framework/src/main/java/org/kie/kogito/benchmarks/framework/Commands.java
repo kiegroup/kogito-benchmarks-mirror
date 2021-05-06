@@ -79,6 +79,12 @@ public class Commands {
                 return sys;
             }
         }
+
+        String mainBuildRepo = System.getProperty("maven.repo.local");
+        if (StringUtils.isNotBlank(mainBuildRepo)) {
+            return mainBuildRepo;
+        }
+
         return System.getProperty("user.home") + File.separator + ".m2" + File.separator + "repository";
     }
 
@@ -271,6 +277,9 @@ public class Commands {
         }
         buildCmd.addAll(Arrays.asList(baseCommand));
         buildCmd.add("-Dmaven.repo.local=" + getLocalMavenRepoDir());
+        // use the same settings.xml as the main build
+        buildCmd.add("-s");
+        buildCmd.add(System.getProperty("maven.settings"));
 
         return Collections.unmodifiableList(buildCmd);
     }
@@ -602,6 +611,7 @@ public class Commands {
             pb.redirectOutput(ProcessBuilder.Redirect.to(log));
             Process p = null;
             try {
+                LOGGER.info("Running command: " + String.join(" ", command));
                 p = pb.start();
             } catch (IOException e) {
                 e.printStackTrace();
