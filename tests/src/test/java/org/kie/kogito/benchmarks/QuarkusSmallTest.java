@@ -10,12 +10,10 @@ public class QuarkusSmallTest extends AbstractTemplateTest {
 
     private static final App APP_TO_TEST = App.SMARTHOUSE_02_QUARKUS_JVM;
 
-    @Test
     public void startStop(TestInfo testInfo) throws IOException, InterruptedException {
         startStop(testInfo, APP_TO_TEST);
     }
 
-    @Test
     public void loadTest(TestInfo testInfo) {
         // TODO
     }

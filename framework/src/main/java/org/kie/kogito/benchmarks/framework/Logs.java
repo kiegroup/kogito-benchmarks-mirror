@@ -31,7 +31,7 @@ public class Logs {
     public static final String jarSuffix = "redhat";
     private static final Pattern jarNamePattern = Pattern.compile("^((?!" + jarSuffix + ").)*jar$");
 
-    private static final Pattern startedPattern = Pattern.compile(".* started in ([0-9\\.]+)s.*", Pattern.DOTALL);
+    private static final Pattern startedPattern = Pattern.compile(".* [Ss]tarted.* in ([0-9\\.]+)(?:s| seconds).*", Pattern.DOTALL);
     private static final Pattern stoppedPattern = Pattern.compile(".* stopped in ([0-9\\.]+)s.*", Pattern.DOTALL);
     /*
      * Due to console colouring, Windows has control characters in the sequence.
@@ -44,7 +44,7 @@ public class Logs {
      * depending on whether you checked AllowInteractingWithDesktop.
      * // TODO to make it smoother?
      */
-    private static final Pattern startedPatternControlSymbols = Pattern.compile(".* started in .*188m([0-9\\.]+).*", Pattern.DOTALL);
+    private static final Pattern startedPatternControlSymbols = Pattern.compile(".* [Ss]tarted.* in .*188m([0-9\\.]+)(?:s| seconds).*", Pattern.DOTALL);
     private static final Pattern stoppedPatternControlSymbols = Pattern.compile(".* stopped in .*188m([0-9\\.]+).*", Pattern.DOTALL);
 
     private static final Pattern warnErrorDetectionPattern = Pattern.compile("(?i:.*(ERROR|WARN|SLF4J:).*)");
@@ -79,6 +79,9 @@ public class Logs {
     }
 
     public static void checkListeningHost(String testClass, String testMethod, MvnCmds cmd, File log) throws IOException {
+        if (cmd.name().startsWith("SPRING")) {
+            return; // Spring Boot doesn't provide the host information by default (only at debug level)
+        }
         boolean isOffending = true;
         try (Scanner sc = new Scanner(log, UTF_8)) {
             while (sc.hasNextLine()) {
@@ -142,7 +145,7 @@ public class Logs {
 
     public static void checkThreshold(App app, MvnCmds cmd, long rssKb, long timeToFirstOKRequest, long timeToReloadedOKRequest) {
         String propPrefix = isThisWindows ? "windows" : "linux";
-        if (cmd == MvnCmds.QUARKUS_JVM) {
+        if (cmd.isJVM()) {
             propPrefix += ".jvm";
         } else if (cmd == MvnCmds.NATIVE) {
             propPrefix += ".native";
@@ -294,7 +297,7 @@ public class Logs {
                 .collect(Collectors.toList());
     }
 
-    public static float[] parseStartStopTimestamps(File log) throws IOException {
+    public static float[] parseStartStopTimestamps(File log, App app) throws IOException {
         float[] startedStopped = new float[] { -1f, -1f };
         try (Scanner sc = new Scanner(log, UTF_8)) {
             while (sc.hasNextLine()) {
@@ -326,12 +329,12 @@ public class Logs {
         }
         if (startedStopped[0] == -1f) {
             LOGGER.error("Parsing start time from log failed. " +
-                    "Might not be the right time to call this method. The process might have ben killed before it wrote to log." +
+                    "Might not be the right time to call this method. The process might have ben killed before it wrote to log. " +
                     "Find " + log.getName() + " in your target dir.");
         }
-        if (startedStopped[1] == -1f) {
+        if (startedStopped[1] == -1f && !app.isSpringBoot()) { // Spring Boot doesn't provide stop time
             LOGGER.error("Parsing stop time from log failed. " +
-                    "Might not be the right time to call this method. The process might have been killed before it wrote to log." +
+                    "Might not be the right time to call this method. The process might have been killed before it wrote to log. " +
                     "Find " + log.getName() + " in your target dir.");
         }
         return startedStopped;
