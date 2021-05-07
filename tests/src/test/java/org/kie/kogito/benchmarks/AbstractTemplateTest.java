@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -299,6 +300,8 @@ public abstract class AbstractTemplateTest {
             }
 
             System.out.println("First response time: " + firstResponseTime);
+            System.out.println("First response times: " + values.stream().limit(100).collect(Collectors.toList()));
+            System.out.println("Last response times: " + values.stream().skip(values.size() - 100).collect(Collectors.toList()));
             System.out.println("Average response time: " + values.stream().mapToLong(Long::longValue).average());
             System.out.println("Total duration: " + totalDuration);
 
