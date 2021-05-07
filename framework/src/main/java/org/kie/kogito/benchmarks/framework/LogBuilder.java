@@ -72,7 +72,7 @@ public class LogBuilder {
     }
 
     public LogBuilder stoppedInMs(long stoppedInMs) {
-        if (stoppedInMs <= 0) {
+        if (stoppedInMs <= 0 && !app.isSpringBoot()) { // Spring Boot doesn't provide stop time
             throw new IllegalArgumentException("stoppedInMs must be a positive long, was: " + stoppedInMs);
         }
         this.stoppedInMs = stoppedInMs;

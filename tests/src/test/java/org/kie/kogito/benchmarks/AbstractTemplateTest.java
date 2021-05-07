@@ -71,14 +71,15 @@ public abstract class AbstractTemplateTest {
             cleanTarget(app);
             Files.createDirectories(Paths.get(appDir.getAbsolutePath() + File.separator + "logs"));
 
-            // Build
+            // Build first time to download dependencies
             BuildResult buildResult = buildApp(app, mn, cn, whatIDidReport);
             buildLogA = buildResult.getBuildLog();
 
             assertTrue(buildLogA.exists());
             checkLog(cn, mn, app, mvnCmds, buildLogA);
 
-            // Prepare for run
+            // Prepare for measurements
+            List<Long> buildTimeValues = new ArrayList<>(START_STOP_ITERATIONS);
             List<Long> rssKbValues = new ArrayList<>(START_STOP_ITERATIONS);
             List<Long> timeToFirstOKRequestValues = new ArrayList<>(START_STOP_ITERATIONS);
             List<Long> startedInMsValues = new ArrayList<>(START_STOP_ITERATIONS);
@@ -86,8 +87,15 @@ public abstract class AbstractTemplateTest {
             List<Long> openedFilesValues = new ArrayList<>(START_STOP_ITERATIONS);
 
             for (int i = 0; i < START_STOP_ITERATIONS; i++) {
-                // Run
                 LOGGER.info("Running... round " + i);
+                // Build
+                buildResult = buildApp(app, mn, cn, whatIDidReport);
+                buildLogA = buildResult.getBuildLog();
+
+                assertTrue(buildLogA.exists());
+                checkLog(cn, mn, app, mvnCmds, buildLogA);
+
+                // Run
                 RunInfo runInfo = startApp(app, whatIDidReport);
                 pA = runInfo.getProcess();
                 runLogA = runInfo.getRunLog();
@@ -107,7 +115,7 @@ public abstract class AbstractTemplateTest {
                 checkLog(cn, mn, app, mvnCmds, runLogA);
                 checkListeningHost(cn, mn, mvnCmds, runLogA);
 
-                float[] startedStopped = parseStartStopTimestamps(runLogA);
+                float[] startedStopped = parseStartStopTimestamps(runLogA, app);
                 long startedInMs = (long) (startedStopped[0] * 1000);
                 long stoppedInMs = (long) (startedStopped[1] * 1000);
 
@@ -126,6 +134,7 @@ public abstract class AbstractTemplateTest {
                 appendln(whatIDidReport, "Measurements:");
                 appendln(whatIDidReport, log.headerMarkdown + "\n" + log.lineMarkdown);
 
+                buildTimeValues.add(buildResult.getBuildTimeMs());
                 rssKbValues.add(rssKb);
                 openedFilesValues.add(openedFiles);
                 timeToFirstOKRequestValues.add(runInfo.getTimeToFirstOKRequest());
@@ -133,6 +142,7 @@ public abstract class AbstractTemplateTest {
                 stoppedInMsValues.add(stoppedInMs);
             }
 
+            long buildTimeAvgWithoutMinMax = getAvgWithoutMinMax(buildTimeValues);
             long rssKbAvgWithoutMinMax = getAvgWithoutMinMax(rssKbValues);
             long openedFilesAvgWithoutMinMax = getAvgWithoutMinMax(openedFilesValues);
             long timeToFirstOKRequestAvgWithoutMinMax = getAvgWithoutMinMax(timeToFirstOKRequestValues);
@@ -144,7 +154,7 @@ public abstract class AbstractTemplateTest {
             LogBuilder.Log log = new LogBuilder()
                     .app(app)
                     .mode(mvnCmds)
-                    .buildTimeMs(buildResult.getBuildTimeMs())
+                    .buildTimeMs(buildTimeAvgWithoutMinMax)
                     .timeToFirstOKRequestMs(timeToFirstOKRequestAvgWithoutMinMax)
                     .startedInMs(startedInMsAvgWithoutMinMax)
                     .stoppedInMs(stoppedInMsAvgWithoutMinMax)
@@ -305,7 +315,7 @@ public abstract class AbstractTemplateTest {
             checkLog(cn, mn, app, mvnCmds, runLogA);
             checkListeningHost(cn, mn, mvnCmds, runLogA);
 
-            float[] startedStopped = parseStartStopTimestamps(runLogA);// Don't need this in the load test?
+            float[] startedStopped = parseStartStopTimestamps(runLogA, app);// Don't need this in the load test?
             long startedInMs = (long) (startedStopped[0] * 1000);
             long stoppedInMs = (long) (startedStopped[1] * 1000);
 

@@ -140,7 +140,7 @@ public class StartStopTest {
                 checkLog(cn, mn, app, mvnCmds, runLogA);
                 checkListeningHost(cn, mn, mvnCmds, runLogA);
 
-                float[] startedStopped = parseStartStopTimestamps(runLogA);
+                float[] startedStopped = parseStartStopTimestamps(runLogA, app);
 
                 Path measurementsLog = Paths.get(getLogsDir(cn, mn).toString(), "measurements.csv");
                 LogBuilder.Log log = new LogBuilder()
@@ -185,10 +185,10 @@ public class StartStopTest {
         return (long) listOfValues.stream().mapToLong(val -> val).average().orElse(Long.MAX_VALUE);
     }
 
-    @Test
-    public void kogito(TestInfo testInfo) throws IOException, InterruptedException {
-        testRuntime(testInfo, App.SMARTHOUSE_02_QUARKUS_JVM, MvnCmds.QUARKUS_JVM);
-    }
+//    @Test
+//    public void kogito(TestInfo testInfo) throws IOException, InterruptedException {
+//        testRuntime(testInfo, App.SMARTHOUSE_02_QUARKUS_JVM, MvnCmds.QUARKUS_JVM);
+//    }
 
     //    @Test
     //    public void jaxRsMinimalJVM(TestInfo testInfo) throws IOException, InterruptedException {

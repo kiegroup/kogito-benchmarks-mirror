@@ -62,4 +62,12 @@ public enum App {
     public File getAppDir() {
         return new File(APPS_DIR, dir);
     }
+
+    public boolean isQuarkus() {
+        return this.name().contains("QUARKUS");
+    }
+
+    public boolean isSpringBoot() {
+        return this.name().contains("SPRING");
+    }
 }
