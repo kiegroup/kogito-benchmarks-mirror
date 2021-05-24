@@ -37,6 +37,7 @@ import static org.kie.kogito.benchmarks.framework.Commands.getOpenedFDs;
 import static org.kie.kogito.benchmarks.framework.Commands.getRSSkB;
 import static org.kie.kogito.benchmarks.framework.Commands.parsePort;
 import static org.kie.kogito.benchmarks.framework.Commands.processStopper;
+import static org.kie.kogito.benchmarks.framework.Commands.setCPUAffinity;
 import static org.kie.kogito.benchmarks.framework.Commands.startApp;
 import static org.kie.kogito.benchmarks.framework.Commands.waitForTcpClosed;
 import static org.kie.kogito.benchmarks.framework.Logs.SKIP;
@@ -51,7 +52,7 @@ import static org.kie.kogito.benchmarks.framework.Logs.writeReport;
 
 public abstract class AbstractTemplateTest {
 
-    private static final Logger LOGGER = Logger.getLogger(StartStopTest.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(AbstractTemplateTest.class.getName());
 
     public static final int START_STOP_ITERATIONS = 3;
     public static final String LOCALHOST = "http://localhost:8080";
@@ -211,6 +212,7 @@ public abstract class AbstractTemplateTest {
 
             // Start the App
             RunInfo runInfo = startApp(app, whatIDidReport);
+            setCPUAffinity(runInfo, 4);
             pA = runInfo.getProcess();
             runLogA = runInfo.getRunLog();
 

@@ -35,6 +35,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.lang3.StringUtils;
+import org.assertj.core.api.Assertions;
 import org.jboss.logging.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -242,6 +243,25 @@ public class Commands {
         }
 
         return new RunInfo(pA, runLogA, timeToFirstOKRequest);
+    }
+
+    public static void setCPUAffinity(RunInfo runInfo, int numOfCores) throws IOException, InterruptedException {
+        LOGGER.info("Setting CPU affinity of app to " + numOfCores + " core(s)");
+        String listOfCores = "0-" + (numOfCores - 1);
+        String processId = String.valueOf(runInfo.getProcess().pid());
+        ProcessBuilder pBuilder = new ProcessBuilder("taskset", "-cpa", listOfCores, processId);
+        pBuilder.redirectErrorStream(true);
+        Process p = pBuilder.start();
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
+            String newCPUAffinity = bufferedReader.lines()
+                    .filter(s -> s.contains("new affinity list"))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("New CPU Affinity not set!"));
+            String expectedAffinityList = numOfCores == 1 ? "0" : numOfCores == 2 ? "0,1" : listOfCores;
+            Assertions.assertThat(newCPUAffinity).contains(expectedAffinityList);
+            p.waitFor();
+        }
+        Assertions.assertThat(p.exitValue()).isEqualTo(0);
     }
 
     public static void cleanDirOrFile(String... path) {
