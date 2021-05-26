@@ -12,11 +12,11 @@ public enum MvnCmds {
     }),
     SPRING_BOOT_02_JVM(new String[][] {
             new String[] { "mvn", "clean", "package" }, // There is no possibility of changing the final name of the artifact
-            new String[] { "java", "-jar", "target/smarthouse-02-dm-springboot-1.0-SNAPSHOT.jar" }
+            new String[] { "java", "-jar", "target/smarthouse.jar" }
     }),
     SPRING_BOOT_03_JVM(new String[][] {
             new String[] { "mvn", "clean", "package" },
-            new String[] { "java", "-jar", "target/smarthouse-03-dm-springboot-1.0-SNAPSHOT.jar" }
+            new String[] { "java", "-jar", "target/smarthouse.jar" }
     }),
     DEV(new String[][] {
             new String[] { "mvn", "clean", "quarkus:dev", "-Dmaven.repo.local=" + getLocalMavenRepoDir() }
