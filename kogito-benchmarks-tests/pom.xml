@@ -16,8 +16,6 @@
   <description>Benchmarks of sample Kogito apps themselves</description>
 
   <properties>
-    <!-- Skip benchmarks by default -->
-    <skipTests>true</skipTests>
     <appsDir>${project.parent.basedir}/</appsDir>
 
     <version.org.apache.httpcomponents>4.5.13</version.org.apache.httpcomponents>

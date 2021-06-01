@@ -16,7 +16,7 @@
   <description>Framework for starting, measuring and stopping Kogito apps</description>
 
   <properties>
-    <log4j.version>2.13.2</log4j.version>
+
   </properties>
 
   <dependencyManagement>
@@ -58,17 +58,6 @@
         <version>${version.org.junit.platform}</version>
         <scope>compile</scope>
       </dependency>
-
-<!--      <dependency>-->
-<!--        <groupId>org.apache.logging.log4j</groupId>-->
-<!--        <artifactId>log4j-api</artifactId>-->
-<!--        <version>${log4j.version}</version>-->
-<!--      </dependency>-->
-<!--      <dependency>-->
-<!--        <groupId>org.apache.logging.log4j</groupId>-->
-<!--        <artifactId>log4j-core</artifactId>-->
-<!--        <version>${log4j.version}</version>-->
-<!--      </dependency>-->
     </dependencies>
   </dependencyManagement>
 
