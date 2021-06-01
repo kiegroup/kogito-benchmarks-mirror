@@ -13,17 +13,16 @@
   <artifactId>kogito-benchmarks</artifactId>
   <packaging>pom</packaging>
 
-  <name></name>
-  <description></description>
+  <name>Kogito :: Benchmarks</name>
+  <description>Benchmarks of sample Kogito apps</description>
 
   <properties>
     <maven.compiler.release>11</maven.compiler.release> <!-- Mainly because of the additions to the Process API introduced in Java 9 -->
   </properties>
 
   <modules>
-    <module>framework</module>
-    <module>sample-kogito-app</module>
-    <module>tests</module>
+    <module>kogito-benchmarks-framework</module>
+    <module>kogito-benchmarks-tests</module>
   </modules>
 
 
