@@ -4,8 +4,6 @@ import java.util.regex.Pattern;
 
 /**
  * Whitelists errors in log files.
- *
- * @author Michal Karm Babacek <karm@redhat.com>
  */
 public enum WhitelistLogLines {
     EVERYTHING(new Pattern[] { Pattern.compile(".*") }),

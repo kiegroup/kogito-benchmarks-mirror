@@ -122,8 +122,6 @@ public class Logs {
             propPrefix += ".native";
         } else if (cmd == MvnCmds.DEV) {
             propPrefix += ".dev";
-            //        } else if (cmd == MvnCmds.GENERATOR) {
-            //            propPrefix += ".generated.dev";
         } else {
             throw new IllegalArgumentException("Unexpected mode. Check MvnCmds.java.");
         }

@@ -57,7 +57,7 @@ public abstract class AbstractTemplateTest {
     public static final String LOCALHOST = "http://localhost:8080";
 
     public void startStop(TestInfo testInfo, App app) throws IOException, InterruptedException {
-        logger.info("Testing app startStop: " + app.toString() + ", mode: " + app.mavenCommands.toString());
+        logger.info("Running startStop test. Testing app: " + app.toString() + ", mode: " + app.mavenCommands.toString());
 
         Process pA = null;
         File buildLogA = null;
@@ -186,7 +186,7 @@ public abstract class AbstractTemplateTest {
     }
 
     public void loadTest(TestInfo testInfo, App app, HTTPRequestInfo requestInfo) throws IOException, InterruptedException {
-        logger.info("Testing app loadTest: " + app.toString() + ", mode: " + app.mavenCommands.toString());
+        logger.info("Running loadTest test. Testing app: " + app.toString() + ", mode: " + app.mavenCommands.toString());
 
         Process pA = null;
         File buildLogA = null;
@@ -345,7 +345,8 @@ public abstract class AbstractTemplateTest {
             appendln(whatIDidReport, "Measurements:");
             appendln(whatIDidReport, log.headerMarkdown + "\n" + log.lineMarkdown);
 
-            //checkThreshold(app, mvnCmds, rssKbAvgWithoutMinMax, timeToFirstOKRequestAvgWithoutMinMax, SKIP);
+            // TODO check other load test-related metrics here, e.g. rssKbFinal
+            checkThreshold(app, mvnCmds, rssKb, runInfo.getTimeToFirstOKRequest(), SKIP);
         } finally {
             // Make sure processes are down even if there was an exception / failure
             if (pA != null) {

@@ -170,7 +170,6 @@ public class Commands {
         ExecutorService buildService = Executors.newFixedThreadPool(1);
 
         List<String> baseBuildCmd = new ArrayList<>(Arrays.asList(app.mavenCommands.mvnCmds[0]));
-        //baseBuildCmd.add("-Dquarkus.version=" + getQuarkusVersion());
         List<String> cmd = getBuildCommand(baseBuildCmd.toArray(new String[0]));
 
         buildService.submit(new Commands.ProcessRunner(appDir, buildLogA, cmd, 20)); // TODO exit code handling
@@ -230,9 +229,8 @@ public class Commands {
                         .sorted(Comparator.reverseOrder())
                         .map(Path::toFile)
                         .forEach(File::delete);
-                //FileUtils.forceDelete(new File(s));
             } catch (IOException e) {
-                //Silence is golden
+                logger.warn("Unable to delete directories or files", e);
             }
         }
     }

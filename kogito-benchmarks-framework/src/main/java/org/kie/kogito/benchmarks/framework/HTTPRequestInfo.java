@@ -4,7 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A class representing
+ * A class representing HTTP Request details such as:
+ * <ul>
+ *     <li> URI</li>
+ *     <li>Request body</li>
+ *     <li>HTTP method</li>
+ *     <li>HTTP headers</li>
+ *     <li>Expected status code of the response</li>
+ * </ul>
  */
 public class HTTPRequestInfo {
 
@@ -13,26 +20,6 @@ public class HTTPRequestInfo {
     private String method;
     private Map<String, String> headers = new HashMap<>();
     private int expectedResponseStatusCode;
-
-    private void setURI(String uri) {
-        this.uri = uri;
-    }
-
-    private void setBody(String body) {
-        this.body = body;
-    }
-
-    private void setMethod(String method) {
-        this.method = method;
-    }
-
-    private void addHeader(String name, String value) {
-        this.headers.put(name, value);
-    }
-
-    private void setExpectedResponseStatusCode(int expectedResponseStatusCode) {
-        this.expectedResponseStatusCode = expectedResponseStatusCode;
-    }
 
     public String getURI() {
         return uri;
@@ -63,27 +50,27 @@ public class HTTPRequestInfo {
         private final HTTPRequestInfo instance = new HTTPRequestInfo();
 
         public Builder URI(String uri) {
-            instance.setURI(uri);
+            instance.uri = uri;
             return this;
         }
 
         public Builder body(String body) {
-            instance.setBody(body);
+            instance.body = body;
             return this;
         }
 
         public Builder method(String method) {
-            instance.setMethod(method);
+            instance.method = method;
             return this;
         }
 
         public Builder header(String name, String value) {
-            instance.addHeader(name, value);
+            instance.headers.put(name, value);
             return this;
         }
 
         public Builder expectedResponseStatusCode(int statusCode) {
-            instance.setExpectedResponseStatusCode(statusCode);
+            instance.expectedResponseStatusCode = statusCode;
             return this;
         }
 
