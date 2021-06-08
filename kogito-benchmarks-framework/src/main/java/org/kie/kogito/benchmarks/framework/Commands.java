@@ -47,20 +47,6 @@ public class Commands {
     private static final Pattern quarkusVersionPattern = Pattern.compile("[ \t]*<quarkus.version>([^<]*)</quarkus.version>.*");
     private static final Pattern trailingSlash = Pattern.compile("/+$");
 
-    public static String getArtifactGeneBaseDir() {
-        for (String p : new String[] { "ARTIFACT_GENERATOR_WORKSPACE", "artifact.generator.workspace" }) {
-            String env = System.getenv().get(p);
-            if (StringUtils.isNotBlank(env)) {
-                return env;
-            }
-            String sys = System.getProperty(p);
-            if (StringUtils.isNotBlank(sys)) {
-                return sys;
-            }
-        }
-        return System.getProperty("java.io.tmpdir");
-    }
-
     public static String getLocalMavenRepoDir() {
         for (String p : new String[] { "TESTS_MAVEN_REPO_LOCAL", "tests.maven.repo.local" }) {
             String env = System.getenv().get(p);
@@ -78,7 +64,7 @@ public class Commands {
             return mainBuildRepo;
         }
 
-        return System.getProperty("user.home") + File.separator + ".m2" + File.separator + "repository";
+        return Path.of(System.getProperty("user.home"), ".m2", "repository").toString();
     }
 
     /**
@@ -120,8 +106,8 @@ public class Commands {
                 return sys;
             }
         }
-        String failure = "Failed to determine quarkus.version. Check pom.xm, check env and sys vars QUARKUS_VERSION";
-        try (Scanner sc = new Scanner(new File(getBaseDir() + File.separator + "pom.xml"), StandardCharsets.UTF_8)) {
+        String failure = "Failed to determine quarkus.version. Check pom.xml, check env and sys vars QUARKUS_VERSION";
+        try (Scanner sc = new Scanner(Path.of(getBaseDir(), "pom.xml"), StandardCharsets.UTF_8)) {
             while (sc.hasNextLine()) {
                 String line = sc.nextLine();
                 Matcher m = quarkusVersionPattern.matcher(line);
@@ -159,8 +145,8 @@ public class Commands {
     }
 
     public static void cleanTarget(App app) {
-        String target = APPS_DIR + File.separator + app.dir + File.separator + "target";
-        String logs = APPS_DIR + File.separator + app.dir + File.separator + "logs";
+        Path target = Path.of(APPS_DIR, app.dir, "target");
+        Path logs = Path.of(APPS_DIR, app.dir, "logs");
         cleanDirOrFile(target, logs);
     }
 
@@ -222,15 +208,15 @@ public class Commands {
         Assertions.assertThat(p.exitValue()).isEqualTo(0);
     }
 
-    public static void cleanDirOrFile(String... path) {
-        for (String s : path) {
+    public static void cleanDirOrFile(Path... paths) {
+        for (Path path : paths) {
             try {
-                Files.walk(Paths.get(s))
+                Files.walk(path)
                         .sorted(Comparator.reverseOrder())
                         .map(Path::toFile)
                         .forEach(File::delete);
             } catch (IOException e) {
-                logger.warn("Unable to delete directories or files", e);
+                throw new RuntimeException("Unable to delete directories or files", e);
             }
         }
     }
@@ -287,8 +273,8 @@ public class Commands {
 
     // TODO this may be useful in the future
     public static void adjustPrettyPrintForJsonLogging(String appDir) throws IOException {
-        Path appProps = Paths.get(appDir + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator + "application.properties");
-        Path appYaml = Paths.get(appDir + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator + "application.yml");
+        Path appProps = Path.of(appDir, "src", "main", "resources", "application.properties");
+        Path appYaml = Path.of(appDir, "src", "main", "resources", "application.yml");
 
         adjustFileContent(appProps, "quarkus.log.console.json.pretty-print=true", "quarkus.log.console.json.pretty-print=false");
         adjustFileContent(appYaml, "pretty-print: true", "pretty-print: fase");

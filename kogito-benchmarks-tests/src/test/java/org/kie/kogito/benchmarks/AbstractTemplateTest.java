@@ -70,7 +70,7 @@ public abstract class AbstractTemplateTest {
         try {
             // Cleanup
             cleanTarget(app);
-            Files.createDirectories(Paths.get(appDir.getAbsolutePath() + File.separator + "logs"));
+            Files.createDirectories(Path.of(appDir.getAbsolutePath(), "logs"));
 
             // Build first time to download dependencies
             BuildResult buildResult = buildApp(app, mn, cn, whatIDidReport);
