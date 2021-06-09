@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,7 +22,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.kie.kogito.benchmarks.framework.Commands.BASE_DIR;
+import static org.kie.kogito.benchmarks.framework.Commands.ARCHIVED_LOGS_DIR;
 import static org.kie.kogito.benchmarks.framework.Commands.isThisWindows;
 
 public class Logs {
@@ -73,8 +72,7 @@ public class Logs {
             }
             assertTrue(offendingLines.isEmpty(),
                     cmd.name() + " log should not contain error or warning lines that are not whitelisted. " +
-                            "See testsuite" + File.separator + "target" + File.separator + "archived-logs" +
-                            File.separator + testClass + File.separator + testMethod + File.separator + log.getName() +
+                            "See " + Path.of(ARCHIVED_LOGS_DIR, testClass, testMethod, log.getName()) +
                             " and check these offending lines: \n" + String.join("\n", offendingLines));
         }
     }
@@ -100,8 +98,7 @@ public class Logs {
 
         assertFalse(isOffending,
                 cmd.name() + " log should contain expected listening host. " +
-                        "See testsuite" + File.separator + "target" + File.separator + "archived-logs" +
-                        File.separator + testClass + File.separator + testMethod + File.separator + log.getName() +
+                        "See " + Path.of(ARCHIVED_LOGS_DIR, testClass, testMethod, log.getName()) +
                         " and check the listening host.");
     }
 
@@ -161,14 +158,14 @@ public class Logs {
         Path destDir = getLogsDir(testClass, testMethod);
         Files.createDirectories(destDir);
         String filename = log.getName();
-        Files.copy(log.toPath(), Paths.get(destDir.toString(), filename), REPLACE_EXISTING);
+        Files.copy(log.toPath(), destDir.resolve(filename), REPLACE_EXISTING);
     }
 
     public static void writeReport(String testClass, String testMethod, String text) throws IOException {
         Path destDir = getLogsDir(testClass, testMethod);
         Files.createDirectories(destDir);
-        Files.write(Paths.get(destDir.toString(), "report.md"), text.getBytes(UTF_8), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-        Path agregateReport = Paths.get(getLogsDir().toString(), "aggregated-report.md");
+        Files.write(destDir.resolve("report.md"), text.getBytes(UTF_8), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+        Path agregateReport = getLogsDir().resolve("aggregated-report.md");
         if (Files.notExists(agregateReport)) {
             Files.write(agregateReport, ("# Aggregated Report\n\n").getBytes(UTF_8), StandardOpenOption.CREATE);
         }
@@ -189,19 +186,19 @@ public class Logs {
     }
 
     public static Path getLogsDir(String testClass, String testMethod) throws IOException {
-        Path destDir = new File(getLogsDir(testClass).toString() + File.separator + testMethod).toPath();
+        Path destDir = getLogsDir(testClass).resolve(testMethod);
         Files.createDirectories(destDir);
         return destDir;
     }
 
     public static Path getLogsDir(String testClass) throws IOException {
-        Path destDir = new File(getLogsDir().toString() + File.separator + testClass).toPath();
+        Path destDir = getLogsDir().resolve(testClass);
         Files.createDirectories(destDir);
         return destDir;
     }
 
     public static Path getLogsDir() throws IOException {
-        Path destDir = new File(BASE_DIR + File.separator + "tests" + File.separator + "archived-logs").toPath();
+        Path destDir = Path.of(ARCHIVED_LOGS_DIR);
         Files.createDirectories(destDir);
         return destDir;
     }

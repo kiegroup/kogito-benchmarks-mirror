@@ -16,7 +16,8 @@
   <description>Benchmarks of sample Kogito apps themselves</description>
 
   <properties>
-    <appsDir>${project.parent.basedir}/</appsDir>
+    <appsDir>apps-dir-needs-to-be-specified</appsDir>
+    <archivedLogsDir>${project.basedir}/archived-logs</archivedLogsDir>
 
     <version.org.apache.httpcomponents>4.5.13</version.org.apache.httpcomponents>
   </properties>
@@ -55,6 +56,7 @@
         <configuration>
           <systemPropertyVariables>
             <appsDir>${appsDir}</appsDir>
+            <archivedLogsDir>${archivedLogsDir}</archivedLogsDir>
           </systemPropertyVariables>
         </configuration>
       </plugin>

@@ -120,7 +120,7 @@ public abstract class AbstractTemplateTest {
                 long startedInMs = (long) (startedStopped[0] * 1000);
                 long stoppedInMs = (long) (startedStopped[1] * 1000);
 
-                Path measurementsLog = Paths.get(getLogsDir(cn, mn).toString(), "measurements.csv");
+                Path measurementsLog = getLogsDir(cn, mn).resolve("measurements.csv");
                 LogBuilder.Log log = new LogBuilder()
                         .app(app)
                         .mode(mvnCmds)
@@ -150,7 +150,7 @@ public abstract class AbstractTemplateTest {
             long startedInMsAvgWithoutMinMax = getAvgWithoutMinMax(startedInMsValues);
             long stoppedInMsAvgWithoutMinMax = getAvgWithoutMinMax(stoppedInMsValues);
 
-            Path measurementsSummary = Paths.get(getLogsDir(cn).toString(), "measurementsSummary.csv");
+            Path measurementsSummary = getLogsDir(cn).resolve("measurementsSummary.csv");
 
             LogBuilder.Log log = new LogBuilder()
                     .app(app)
@@ -199,7 +199,7 @@ public abstract class AbstractTemplateTest {
         try {
             // Cleanup
             cleanTarget(app);
-            Files.createDirectories(Paths.get(appDir.getAbsolutePath() + File.separator + "logs"));
+            Files.createDirectories(Path.of(appDir.getAbsolutePath(), "logs"));
 
             // Build
             BuildResult buildResult = buildApp(app, mn, cn, whatIDidReport);
@@ -320,8 +320,8 @@ public abstract class AbstractTemplateTest {
             long startedInMs = (long) (startedStopped[0] * 1000);
             long stoppedInMs = (long) (startedStopped[1] * 1000);
 
-            Path measurementsLog = Paths.get(getLogsDir(cn, mn).toString(), "measurements.csv");
-            Path measurementsSummaryLog = Paths.get(getLogsDir(cn).toString(), "measurementsSummary.csv");
+            Path measurementsLog = getLogsDir(cn, mn).resolve("measurements.csv");
+            Path measurementsSummaryLog = getLogsDir(cn).resolve("measurementsSummary.csv");
             LogBuilder.Log log = new LogBuilder()
                     .app(app)
                     .mode(mvnCmds)

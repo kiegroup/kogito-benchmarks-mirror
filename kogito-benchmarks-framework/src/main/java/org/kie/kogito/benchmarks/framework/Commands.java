@@ -11,7 +11,6 @@ import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -41,6 +40,7 @@ public class Commands {
 
     public static final String BASE_DIR = getBaseDir();
     public static final String APPS_DIR = getAppsDir();
+    public static final String ARCHIVED_LOGS_DIR = getArchivedLogsDir();
     public static final String MVNW = Commands.isThisWindows ? "mvnw.cmd" : "./mvnw";
     public static final boolean isThisWindows = System.getProperty("os.name").matches(".*[Ww]indows.*");
     private static final Pattern numPattern = Pattern.compile("[ \t]*[0-9]+[ \t]*");
@@ -130,6 +130,10 @@ public class Commands {
         return getSystemPropertyOrEnvVarValue("appsDir");
     }
 
+    public static String getArchivedLogsDir() {
+        return getSystemPropertyOrEnvVarValue("archivedLogsDir");
+    }
+
     private static String getSystemPropertyOrEnvVarValue(String name) {
         String systemPropertyValue = System.getProperty(name);
         if (StringUtils.isNotBlank(systemPropertyValue)) {
@@ -152,7 +156,7 @@ public class Commands {
 
     public static BuildResult buildApp(App app, String methodName, String className, StringBuilder whatIDidReport) throws InterruptedException {
         File appDir = app.getAppDir();
-        File buildLogA = new File(appDir.getAbsolutePath() + File.separator + "logs" + File.separator + app.mavenCommands.name().toLowerCase() + "-build.log");
+        File buildLogA = Path.of(appDir.getAbsolutePath(), "logs", app.mavenCommands.name().toLowerCase() + "-build.log").toFile();
         ExecutorService buildService = Executors.newFixedThreadPool(1);
 
         List<String> baseBuildCmd = new ArrayList<>(Arrays.asList(app.mavenCommands.mvnCmds[0]));
@@ -174,7 +178,7 @@ public class Commands {
 
     public static RunInfo startApp(App app, StringBuilder whatIDidReport) throws IOException, InterruptedException {
         File appDir = app.getAppDir();
-        File runLogA = new File(appDir.getAbsolutePath() + File.separator + "logs" + File.separator + app.mavenCommands.name().toLowerCase() + "-run.log");
+        File runLogA = Path.of(appDir.getAbsolutePath(), "logs", app.mavenCommands.name().toLowerCase() + "-run.log").toFile();
         List<String> cmd = getRunCommand(app.mavenCommands.mvnCmds[1]);
         appendln(whatIDidReport, appDir.getAbsolutePath());
         appendlnSection(whatIDidReport, String.join(" ", cmd));
@@ -313,8 +317,7 @@ public class Commands {
             if (isThisWindows) {
                 if (!force) {
                     Process p = Runtime.getRuntime().exec(new String[] {
-                            BASE_DIR + File.separator + "framework" + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator +
-                                    "CtrlC.exe ",
+                            Path.of(BASE_DIR, "kogito-benchmarks-framework", "src", "main", "resources", "CtrlC.exe ").toString(),
                             Long.toString(pid) });
                     p.waitFor(1, TimeUnit.MINUTES);
                 }
