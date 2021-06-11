@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -219,6 +220,8 @@ public class Commands {
                         .sorted(Comparator.reverseOrder())
                         .map(Path::toFile)
                         .forEach(File::delete);
+            } catch (NoSuchFileException e) {
+                logger.info("Cleaning of directory {} skipped because it does not exist.", e.getFile());
             } catch (IOException e) {
                 throw new RuntimeException("Unable to delete directories or files", e);
             }
