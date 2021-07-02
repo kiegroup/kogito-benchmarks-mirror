@@ -116,7 +116,6 @@ public abstract class AbstractTemplateTest {
                 runLogA = runInfo.getRunLog();
 
                 logger.info("Terminate and scan logs...");
-                pA.getInputStream().available(); // TODO Ask Karm
 
                 long rssKb = getRSSkB(pA.pid());
                 long openedFiles = getOpenedFDs(pA.pid());
