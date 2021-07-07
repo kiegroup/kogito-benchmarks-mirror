@@ -16,8 +16,12 @@
   <description>Benchmarks of sample Kogito apps themselves</description>
 
   <properties>
+    <!-- Framework -->
     <appsDir>apps-dir-needs-to-be-specified</appsDir>
     <archivedLogsDir>${project.basedir}/archived-logs</archivedLogsDir>
+
+    <!-- Test Suite -->
+    <cpuAffinity>4</cpuAffinity> <!-- Positive number sets the CPU affinity explicitly -->
 
     <version.org.apache.httpcomponents>4.5.13</version.org.apache.httpcomponents>
   </properties>
@@ -57,6 +61,7 @@
           <systemPropertyVariables>
             <appsDir>${appsDir}</appsDir>
             <archivedLogsDir>${archivedLogsDir}</archivedLogsDir>
+            <cpuAffinity>${cpuAffinity}</cpuAffinity>
           </systemPropertyVariables>
         </configuration>
       </plugin>
