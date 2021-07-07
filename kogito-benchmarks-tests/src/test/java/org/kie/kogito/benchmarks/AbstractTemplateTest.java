@@ -68,6 +68,7 @@ public abstract class AbstractTemplateTest {
     private static final Logger logger = LoggerFactory.getLogger(AbstractTemplateTest.class);
 
     public static final int START_STOP_ITERATIONS = 3;
+    public static final int CPU_AFFINITY = Integer.parseInt(System.getProperty("cpuAffinity"));
     public static final String LOCALHOST = "http://localhost:8080";
 
     public void startStop(TestInfo testInfo, App app) throws IOException, InterruptedException {
@@ -223,7 +224,9 @@ public abstract class AbstractTemplateTest {
 
             // Start the App
             RunInfo runInfo = startApp(app, whatIDidReport);
-            setCPUAffinity(runInfo, 4);
+            if (CPU_AFFINITY > 0) {
+                setCPUAffinity(runInfo, CPU_AFFINITY);
+            }
             pA = runInfo.getProcess();
             runLogA = runInfo.getRunLog();
 
