@@ -163,7 +163,7 @@ public abstract class AbstractTemplateTest {
             long startedInMsAvgWithoutMinMax = getAvgWithoutMinMax(startedInMsValues);
             long stoppedInMsAvgWithoutMinMax = getAvgWithoutMinMax(stoppedInMsValues);
 
-            Path measurementsSummary = getLogsDir(cn).resolve("measurementsSummary.csv");
+            Path measurementsSummary = getLogsDir().resolve("measurementsSummary.csv");
 
             LogBuilder.Log log = new LogBuilder()
                     .app(app)
@@ -334,7 +334,7 @@ public abstract class AbstractTemplateTest {
             long stoppedInMs = (long) (startedStopped[1] * 1000);
 
             Path measurementsLog = getLogsDir(cn, mn).resolve("measurements.csv");
-            Path measurementsSummaryLog = getLogsDir(cn).resolve("measurementsSummary.csv");
+            Path measurementsSummaryLog = getLogsDir().resolve("measurementsSummary.csv");
             LogBuilder.Log log = new LogBuilder()
                     .app(app)
                     .mode(mvnCmds)
