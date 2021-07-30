@@ -324,7 +324,7 @@ public class Commands {
     }
 
     public static Process runCommand(List<String> command, File directory, File logFile) {
-        logger.info("Running command: {}", String.join(" ", command));
+        logger.info("Running command: {}", command);
         ProcessBuilder pa = new ProcessBuilder(command);
         Map<String, String> envA = pa.environment();
         envA.put("PATH", System.getenv("PATH"));
@@ -485,7 +485,7 @@ public class Commands {
             pb.redirectOutput(ProcessBuilder.Redirect.to(log));
             Process p = null;
             try {
-                logger.info("Running command: " + String.join(" ", command));
+                logger.info("Running command: {}", command);
                 p = pb.start();
             } catch (IOException e) {
                 e.printStackTrace();
