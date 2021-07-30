@@ -195,7 +195,7 @@ public class Commands {
     public static RunInfo startApp(App app, StringBuilder whatIDidReport) throws IOException, InterruptedException {
         File appDir = app.getAppDir();
         File runLogA = Path.of(appDir.getAbsolutePath(), "logs", app.mavenCommands.name().toLowerCase() + "-run.log").toFile();
-        List<String> cmd = getRunCommand(app.mavenCommands.mvnCmds[1]);
+        List<String> cmd = getRunCommand(app.mavenCommands.mvnCmds[1], app.jvmArgs);
         appendln(whatIDidReport, appDir.getAbsolutePath());
         appendlnSection(whatIDidReport, String.join(" ", cmd));
         Process pA = runCommand(cmd, appDir, runLogA);
@@ -243,13 +243,22 @@ public class Commands {
         }
     }
 
-    public static List<String> getRunCommand(String[] baseCommand) {
+    public static List<String> getRunCommand(String[] baseCommand, String[] jvmArgs) {
         List<String> runCmd = new ArrayList<>();
         if (isThisWindows) {
             runCmd.add("cmd");
             runCmd.add("/C");
         }
-        runCmd.addAll(Arrays.asList(baseCommand));
+
+        logger.debug("Filtering command: {}", Arrays.asList(baseCommand));
+        for (String cmdPart : baseCommand) {
+            if (cmdPart.equals(MvnCmds.Placeholders.JVM_ARGS)) {
+                runCmd.addAll(Arrays.asList(jvmArgs));
+            } else {
+                runCmd.add(cmdPart);
+            }
+        }
+        logger.debug("Command filtered: {}", runCmd);
 
         return Collections.unmodifiableList(runCmd);
     }
@@ -315,6 +324,7 @@ public class Commands {
     }
 
     public static Process runCommand(List<String> command, File directory, File logFile) {
+        logger.info("Running command: {}", String.join(" ", command));
         ProcessBuilder pa = new ProcessBuilder(command);
         Map<String, String> envA = pa.environment();
         envA.put("PATH", System.getenv("PATH"));

@@ -23,11 +23,11 @@ import static org.kie.kogito.benchmarks.framework.Commands.getQuarkusNativePrope
 public enum MvnCmds {
     QUARKUS_JVM(new String[][] {
             new String[] { "mvn", "clean", "package", "-Dquarkus.package.output-name=quarkus" },
-            new String[] { "java", "-jar", "target/quarkus-runner.jar" }
+            new String[] { "java", Placeholders.JVM_ARGS, "-jar", "target/quarkus-runner.jar" }
     }),
     SPRING_BOOT_JVM(new String[][] {
             new String[] { "mvn", "clean", "package" }, // The JAR name is unified by setting finalName in the kie-assets-library repo
-            new String[] { "java", "-jar", "target/smarthouse.jar" }
+            new String[] { "java", Placeholders.JVM_ARGS, "-jar", "target/smarthouse.jar" }
     }),
 
     // These are not used now but may be useful in the future
@@ -60,5 +60,9 @@ public enum MvnCmds {
 
     public boolean isJVM() {
         return this.name().contains("JVM");
+    }
+
+    public static class Placeholders {
+        public static final String JVM_ARGS = "$JVM_ARGS";
     }
 }

@@ -13,4 +13,6 @@
     <appender-ref ref="consoleAppender" />
   </root>
 
+<!--  <logger name="org.kie.kogito.benchmarks.framework.Commands" level="debug"/>-->
+
 </configuration>
