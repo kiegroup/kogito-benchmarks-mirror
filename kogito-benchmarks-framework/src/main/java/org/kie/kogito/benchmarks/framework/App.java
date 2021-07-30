@@ -29,21 +29,23 @@ import org.apache.commons.lang3.StringUtils;
 import static org.kie.kogito.benchmarks.framework.Commands.APPS_DIR;
 
 public enum App {
-    SMARTHOUSE_02_QUARKUS_JVM("smarthouse-02-quarkus", MvnCmds.QUARKUS_JVM, URLContent.SMARTHOUSE_02, WhitelistLogLines.EVERYTHING),
-    SMARTHOUSE_03_QUARKUS_JVM("smarthouse-03-quarkus", MvnCmds.QUARKUS_JVM, URLContent.SMARTHOUSE_03, WhitelistLogLines.EVERYTHING),
+    SMARTHOUSE_02_QUARKUS_JVM("smarthouse-02-quarkus", MvnCmds.QUARKUS_JVM, new String[] { "-Xms1G", "-Xmx2G" }, URLContent.SMARTHOUSE_02, WhitelistLogLines.EVERYTHING),
+    SMARTHOUSE_03_QUARKUS_JVM("smarthouse-03-quarkus", MvnCmds.QUARKUS_JVM, new String[] { "-Xms1G", "-Xmx3G" }, URLContent.SMARTHOUSE_03, WhitelistLogLines.EVERYTHING),
 
-    SMARTHOUSE_02_SPRING_BOOT("smarthouse-02-springboot", MvnCmds.SPRING_BOOT_JVM, URLContent.SMARTHOUSE_02, WhitelistLogLines.EVERYTHING),
-    SMARTHOUSE_03_SPRING_BOOT("smarthouse-03-springboot", MvnCmds.SPRING_BOOT_JVM, URLContent.SMARTHOUSE_03, WhitelistLogLines.EVERYTHING);
+    SMARTHOUSE_02_SPRING_BOOT("smarthouse-02-springboot", MvnCmds.SPRING_BOOT_JVM, new String[] { "-Xms1G", "-Xmx2G" }, URLContent.SMARTHOUSE_02, WhitelistLogLines.EVERYTHING),
+    SMARTHOUSE_03_SPRING_BOOT("smarthouse-03-springboot", MvnCmds.SPRING_BOOT_JVM, new String[] { "-Xms1G", "-Xmx3G" }, URLContent.SMARTHOUSE_03, WhitelistLogLines.EVERYTHING);
 
     public final String dir;
     public final MvnCmds mavenCommands;
+    public final String[] jvmArgs;
     public final URLContent urlContent;
     public final WhitelistLogLines whitelistLogLines;
     public final Map<String, Long> thresholdProperties = new HashMap<>();
 
-    App(String dir, MvnCmds mavenCommands, URLContent urlContent, WhitelistLogLines whitelistLogLines) {
+    App(String dir, MvnCmds mavenCommands, String[] jvmArgs, URLContent urlContent, WhitelistLogLines whitelistLogLines) {
         this.dir = dir;
         this.mavenCommands = mavenCommands;
+        this.jvmArgs = jvmArgs;
         this.urlContent = urlContent;
         this.whitelistLogLines = whitelistLogLines;
 
