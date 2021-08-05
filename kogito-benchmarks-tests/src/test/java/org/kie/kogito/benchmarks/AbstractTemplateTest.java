@@ -22,7 +22,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -70,6 +70,9 @@ public abstract class AbstractTemplateTest {
     public static final int START_STOP_ITERATIONS = 3;
     public static final int CPU_AFFINITY = Integer.parseInt(System.getProperty("cpuAffinity"));
     public static final String LOCALHOST = "http://localhost:8080";
+
+    private static final double NANOS_IN_MILLISECOND = TimeUnit.MILLISECONDS.toNanos(1);
+    private static final double MILLIS_IN_SECOND = TimeUnit.SECONDS.toMillis(1);
 
     public void startStop(TestInfo testInfo, App app) throws IOException, InterruptedException {
         logger.info("Running startStop test. Testing app: " + app.toString() + ", mode: " + app.mavenCommands.toString());
@@ -312,12 +315,9 @@ public abstract class AbstractTemplateTest {
                 totalDuration = endTime - startTime;
             }
 
-            // Intentionally left here until a proper reporting to a file is present
-            System.out.println("First response time: " + firstResponseTime);
-            System.out.println("First response times: " + values.stream().limit(100).collect(Collectors.toList()));
-            System.out.println("Last response times: " + values.stream().skip(values.size() - 100).collect(Collectors.toList()));
-            System.out.println("Average response time: " + values.stream().mapToLong(Long::longValue).average());
-            System.out.println("Total duration: " + totalDuration);
+            double avgResponseTimeMs = values.stream().mapToLong(Long::longValue).average().orElse(-1) / NANOS_IN_MILLISECOND;
+            double firstResponseTimeMs = firstResponseTime / NANOS_IN_MILLISECOND;
+            double totalDurationS = totalDuration / MILLIS_IN_SECOND;
 
             long rssKbFinal = getRSSkB(pA.pid());
             long openedFiles = getOpenedFDs(pA.pid()); // TODO also do before the "test" itself? Maybe not needed as before is covered in a startStop test
@@ -347,6 +347,9 @@ public abstract class AbstractTemplateTest {
                     .stoppedInMs(stoppedInMs)
                     .rssKb(rssKb)
                     .rssKbFinal(rssKbFinal)
+                    .avgResponseTime(avgResponseTimeMs)
+                    .firstResponseTime(firstResponseTimeMs)
+                    .totalDuration(totalDurationS)
                     .openedFiles(openedFiles)
                     .build();
 
@@ -356,6 +359,9 @@ public abstract class AbstractTemplateTest {
                     .app(app)
                     .mode(mvnCmds)
                     .rssKbFinal(rssKbFinal)
+                    .avgResponseTime(avgResponseTimeMs)
+                    .firstResponseTime(firstResponseTimeMs)
+                    .totalDuration(totalDurationS)
                     .build();
             Logs.logMeasurementsSummary(summaryLog, measurementsSummaryLog);
             appendln(whatIDidReport, "Measurements:");

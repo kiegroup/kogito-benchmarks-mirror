@@ -46,7 +46,13 @@ public class LogBuilder {
     private static final String rssKbHeader = "RSSKb";
     private long rssKb = -1L;
     private static final String rssKbFinalHeader = "RSSKbFinal";
+    private static final String avgResponseTimeHeader = "avgResponseTimeMs";
+    private static final String firstResponseTimeHeader = "firstResponseTimeMs";
+    private static final String totalDurationHeader = "totalDurationS";
     private long rssKbFinal = -1L;
+    private double avgResponseTime = -1.0;
+    private double firstResponseTime = -1.0;
+    private double totalDuration = -1.0;
     private static final String openedFilesHeader = "FDs";
     private long openedFiles = -1L;
     private static final String appHeader = "App";
@@ -107,6 +113,30 @@ public class LogBuilder {
             throw new IllegalArgumentException("rssKb must be a positive long, was: " + rssKb);
         }
         this.rssKbFinal = rssKbFinal;
+        return this;
+    }
+
+    public LogBuilder avgResponseTime(double avgResponseTime) {
+        if (avgResponseTime <= 0) {
+            throw new IllegalArgumentException("avgResponseTime must be a positive double, was: " + rssKb);
+        }
+        this.avgResponseTime = avgResponseTime;
+        return this;
+    }
+
+    public LogBuilder firstResponseTime(double firstResponseTime) {
+        if (firstResponseTime <= 0) {
+            throw new IllegalArgumentException("firstResponseTime must be a positive double, was: " + rssKb);
+        }
+        this.firstResponseTime = firstResponseTime;
+        return this;
+    }
+
+    public LogBuilder totalDuration(double totalDuration) {
+        if (totalDuration <= 0) {
+            throw new IllegalArgumentException("totalDuration must be a positive double, was: " + rssKb);
+        }
+        this.totalDuration = totalDuration;
         return this;
     }
 
@@ -194,6 +224,27 @@ public class LogBuilder {
             h.append(rssKbFinalHeader);
             h.append(',');
             l.append(rssKbFinal);
+            l.append(',');
+            sections++;
+        }
+        if (avgResponseTime != -1L) {
+            h.append(avgResponseTimeHeader);
+            h.append(',');
+            l.append(avgResponseTime);
+            l.append(',');
+            sections++;
+        }
+        if (firstResponseTime != -1L) {
+            h.append(firstResponseTimeHeader);
+            h.append(',');
+            l.append(firstResponseTime);
+            l.append(',');
+            sections++;
+        }
+        if (totalDuration != -1L) {
+            h.append(totalDurationHeader);
+            h.append(',');
+            l.append(totalDuration);
             l.append(',');
             sections++;
         }
