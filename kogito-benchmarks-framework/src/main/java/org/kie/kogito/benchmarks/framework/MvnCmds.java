@@ -23,7 +23,7 @@ import static org.kie.kogito.benchmarks.framework.Commands.getQuarkusNativePrope
 public enum MvnCmds {
     QUARKUS_JVM(new String[][] {
             new String[] { "mvn", "clean", "package", "-Dquarkus.package.output-name=quarkus" },
-            new String[] { "java", Placeholders.JVM_ARGS, "-jar", "target/quarkus-runner.jar" }
+            new String[] { "java", Placeholders.JVM_ARGS, "-jar", "target/quarkus-app/quarkus-run.jar" }
     }),
     SPRING_BOOT_JVM(new String[][] {
             new String[] { "mvn", "clean", "package" }, // The JAR name is unified by setting finalName in the kie-assets-library repo
