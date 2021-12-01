@@ -82,7 +82,7 @@ public class WebpageTester {
                 (StringUtils.isNotBlank(webPage) ? webPage + " must contain string: " : "Empty webpage does not contain string: ") +
                 "`" + stringToLookFor + "'";
         if (!found) {
-            logger.info(failureMessage);
+            logger.warn(failureMessage);
         }
         assertTrue(found, failureMessage);
         return foundTimestamp - startTime;

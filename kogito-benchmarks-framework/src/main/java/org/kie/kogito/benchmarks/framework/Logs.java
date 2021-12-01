@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -159,9 +160,9 @@ public class Logs {
         }
     }
 
-    public static void archiveLog(String testClass, String testMethod, File log) throws IOException {
-        if (log == null || !log.exists()) {
-            logger.warn("log must be a valid, existing file. Skipping operation.");
+    public static void archiveLogs(String testClass, String testMethod, Path appLogsDir) throws IOException {
+        if (appLogsDir == null || !appLogsDir.toFile().exists()) {
+            logger.warn("appLogsDir must be a valid, existing directory. Skipping operation.");
             return;
         }
         if (StringUtils.isBlank(testClass)) {
@@ -172,8 +173,15 @@ public class Logs {
         }
         Path destDir = getLogsDir(testClass, testMethod);
         Files.createDirectories(destDir);
-        String filename = log.getName();
-        Files.copy(log.toPath(), destDir.resolve(filename), REPLACE_EXISTING);
+        try (Stream<Path> walk = Files.walk(appLogsDir)) {
+            walk.skip(1).forEach(path -> { // skip root directory
+                try {
+                    Files.copy(path, destDir.resolve(appLogsDir.relativize(path)), REPLACE_EXISTING);
+                } catch (IOException e) {
+                    logger.warn("Unable to archive file: {}", path, e);
+                }
+            });
+        }
     }
 
     public static void writeReport(String testClass, String testMethod, String text) throws IOException {
