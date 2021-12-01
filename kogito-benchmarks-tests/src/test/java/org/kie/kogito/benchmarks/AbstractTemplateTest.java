@@ -55,7 +55,7 @@ import static org.kie.kogito.benchmarks.framework.Commands.startApp;
 import static org.kie.kogito.benchmarks.framework.Commands.waitForTcpClosed;
 import static org.kie.kogito.benchmarks.framework.Logs.SKIP;
 import static org.kie.kogito.benchmarks.framework.Logs.appendln;
-import static org.kie.kogito.benchmarks.framework.Logs.archiveLog;
+import static org.kie.kogito.benchmarks.framework.Logs.archiveLogs;
 import static org.kie.kogito.benchmarks.framework.Logs.checkListeningHost;
 import static org.kie.kogito.benchmarks.framework.Logs.checkLog;
 import static org.kie.kogito.benchmarks.framework.Logs.checkThreshold;
@@ -190,8 +190,7 @@ public abstract class AbstractTemplateTest {
                 processStopper(pA, true);
             }
             // Archive logs no matter what
-            archiveLog(cn, mn, buildLogA);
-            archiveLog(cn, mn, runLogA);
+            archiveLogs(cn, mn, appDir.toPath().resolve("logs"));
             writeReport(cn, mn, whatIDidReport.toString());
         }
     }
@@ -375,8 +374,7 @@ public abstract class AbstractTemplateTest {
                 processStopper(pA, true);
             }
             // Archive logs no matter what
-            archiveLog(cn, mn, buildLogA);
-            archiveLog(cn, mn, runLogA);
+            archiveLogs(cn, mn, appDir.toPath().resolve("logs"));
             writeReport(cn, mn, whatIDidReport.toString());
         }
     }
