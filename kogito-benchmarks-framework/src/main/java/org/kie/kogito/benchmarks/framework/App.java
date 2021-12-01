@@ -32,10 +32,20 @@ public enum App {
     SMARTHOUSE_02_QUARKUS_JVM("smarthouse-02-quarkus-mvn", MvnCmds.QUARKUS_JVM, new String[] { "-Xms1G", "-Xmx2G" }, URLContent.SMARTHOUSE_02, WhitelistLogLines.EVERYTHING),
     SMARTHOUSE_03_QUARKUS_JVM("smarthouse-03-quarkus-mvn", MvnCmds.QUARKUS_JVM, new String[] { "-Xms1G", "-Xmx3G" }, URLContent.SMARTHOUSE_03, WhitelistLogLines.EVERYTHING),
     SMARTHOUSE_STP_QUARKUS_JVM("stp-smarthouse-03-quarkus-mvn", MvnCmds.QUARKUS_JVM, new String[] { "-Xms1G", "-Xmx3G" }, URLContent.SMARTHOUSE_STP, WhitelistLogLines.EVERYTHING),
+    PMML_CLUSTERING_QUARKUS_JVM("pmml-kie-benchmarks-clustering-quarkus-mvn", MvnCmds.QUARKUS_JVM, new String[] { "-Xms1G", "-Xmx3G" }, URLContent.PMML_QUARKUS, WhitelistLogLines.EVERYTHING),
+    PMML_FOREST_QUARKUS_JVM("pmml-kie-benchmarks-forest-quarkus-mvn", MvnCmds.QUARKUS_JVM, new String[] { "-Xms1G", "-Xmx3G" }, URLContent.PMML_QUARKUS, WhitelistLogLines.EVERYTHING),
+    PMML_MINE_QUARKUS_JVM("pmml-kie-benchmarks-mine-quarkus-mvn", MvnCmds.QUARKUS_JVM, new String[] { "-Xms1G", "-Xmx3G" }, URLContent.PMML_QUARKUS, WhitelistLogLines.EVERYTHING),
+    PMML_REGRESSION_QUARKUS_JVM("pmml-kie-benchmarks-regression-quarkus-mvn", MvnCmds.QUARKUS_JVM, new String[] { "-Xms1G", "-Xmx3G" }, URLContent.PMML_QUARKUS, WhitelistLogLines.EVERYTHING),
+    PMML_SCORECARD_QUARKUS_JVM("pmml-kie-benchmarks-scorecard-quarkus-mvn", MvnCmds.QUARKUS_JVM, new String[] { "-Xms1G", "-Xmx3G" }, URLContent.PMML_QUARKUS, WhitelistLogLines.EVERYTHING),
 
     SMARTHOUSE_02_SPRING_BOOT("smarthouse-02-springboot", MvnCmds.SPRING_BOOT_JVM, new String[] { "-Xms1G", "-Xmx2G" }, URLContent.SMARTHOUSE_02, WhitelistLogLines.EVERYTHING),
     SMARTHOUSE_03_SPRING_BOOT("smarthouse-03-springboot", MvnCmds.SPRING_BOOT_JVM, new String[] { "-Xms1G", "-Xmx3G" }, URLContent.SMARTHOUSE_03, WhitelistLogLines.EVERYTHING),
-    SMARTHOUSE_STP_SPRING_BOOT_JVM("stp-smarthouse-03-springboot", MvnCmds.SPRING_BOOT_JVM, new String[] { "-Xms1G", "-Xmx3G" }, URLContent.SMARTHOUSE_STP, WhitelistLogLines.EVERYTHING);
+    SMARTHOUSE_STP_SPRING_BOOT_JVM("stp-smarthouse-03-springboot", MvnCmds.SPRING_BOOT_JVM, new String[] { "-Xms1G", "-Xmx3G" }, URLContent.SMARTHOUSE_STP, WhitelistLogLines.EVERYTHING),
+    PMML_CLUSTERING_SPRING_BOOT("pmml-kie-benchmarks-clustering-springboot", MvnCmds.SPRING_BOOT_JVM, new String[] { "-Xms1G", "-Xmx2G" }, URLContent.PMML_SPRINGBOOT, WhitelistLogLines.EVERYTHING),
+    PMML_FOREST_SPRING_BOOT("pmml-kie-benchmarks-forest-springboot", MvnCmds.SPRING_BOOT_JVM, new String[] { "-Xms1G", "-Xmx2G" }, URLContent.PMML_SPRINGBOOT, WhitelistLogLines.EVERYTHING),
+    PMML_MINE_SPRING_BOOT("pmml-kie-benchmarks-mine-springboot", MvnCmds.SPRING_BOOT_JVM, new String[] { "-Xms1G", "-Xmx2G" }, URLContent.PMML_SPRINGBOOT, WhitelistLogLines.EVERYTHING),
+    PMML_REGRESSION_SPRING_BOOT("pmml-kie-benchmarks-regression-springboot", MvnCmds.SPRING_BOOT_JVM, new String[] { "-Xms1G", "-Xmx2G" }, URLContent.PMML_SPRINGBOOT, WhitelistLogLines.EVERYTHING),
+    PMML_SCORECARD_SPRING_BOOT("pmml-kie-benchmarks-scorecard-springboot", MvnCmds.SPRING_BOOT_JVM, new String[] { "-Xms1G", "-Xmx2G" }, URLContent.PMML_SPRINGBOOT, WhitelistLogLines.EVERYTHING),;
 
     public final String dir;
     public final MvnCmds mavenCommands;

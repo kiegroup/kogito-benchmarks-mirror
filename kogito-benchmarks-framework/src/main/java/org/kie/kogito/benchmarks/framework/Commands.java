@@ -200,7 +200,7 @@ public class Commands {
         appendlnSection(whatIDidReport, String.join(" ", cmd));
         Process pA = runCommand(cmd, appDir, runLogA);
         // Test web pages
-        long timeToFirstOKRequest = WebpageTester.testWeb(app.urlContent.urlContent[0][0], 10, app.urlContent.urlContent[0][1], true);
+        long timeToFirstOKRequest = WebpageTester.testWeb(app.urlContent.urlContent[0][0], 180, app.urlContent.urlContent[0][1], true);
         logger.info("Testing web page content...");
         for (String[] urlContent : app.urlContent.urlContent) {
             WebpageTester.testWeb(urlContent[0], 5, urlContent[1], false);
