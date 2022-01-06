@@ -57,6 +57,8 @@ public class Commands {
     public static final String BASE_DIR = getBaseDir();
     public static final String APPS_DIR = getAppsDir();
     public static final String ARCHIVED_LOGS_DIR = getArchivedLogsDir();
+    public static final boolean USE_CUSTOM_MAVEN_REPO = getUseCustomMavenRepo();
+    public static final boolean USE_MAIN_BUILD_SETTINGS = getUseMainBuildSettings();
     public static final String MVNW = Commands.isThisWindows ? "mvnw.cmd" : "./mvnw";
     public static final boolean isThisWindows = System.getProperty("os.name").matches(".*[Ww]indows.*");
     private static final Pattern numPattern = Pattern.compile("[ \t]*[0-9]+[ \t]*");
@@ -150,18 +152,32 @@ public class Commands {
         return getSystemPropertyOrEnvVarValue("archivedLogsDir");
     }
 
-    private static String getSystemPropertyOrEnvVarValue(String name) {
+    public static boolean getUseCustomMavenRepo() {
+        String value = getSystemPropertyOrEnvVarValueSilent("useCustomMavenRepo");
+        return !"false".equalsIgnoreCase(value);
+    }
+
+    public static boolean getUseMainBuildSettings() {
+        String value = getSystemPropertyOrEnvVarValueSilent("useMainBuildSettings");
+        return !"false".equalsIgnoreCase(value);
+    }
+
+    private static String getSystemPropertyOrEnvVarValueSilent(String name) {
         String systemPropertyValue = System.getProperty(name);
         if (StringUtils.isNotBlank(systemPropertyValue)) {
             return systemPropertyValue;
         }
 
-        String envPropertyValue = System.getenv(name);
+        return System.getenv(name);
+    }
 
-        if (StringUtils.isBlank(envPropertyValue)) {
+    private static String getSystemPropertyOrEnvVarValue(String name) {
+        String value = getSystemPropertyOrEnvVarValueSilent(name);
+        if (StringUtils.isBlank(value)) {
             throw new IllegalArgumentException("Unable to determine the value of the property " + name);
         }
-        return envPropertyValue;
+
+        return value;
     }
 
     public static void cleanTarget(App app) {
@@ -270,10 +286,14 @@ public class Commands {
             buildCmd.add("/C");
         }
         buildCmd.addAll(Arrays.asList(baseCommand));
-        buildCmd.add("-Dmaven.repo.local=" + getLocalMavenRepoDir());
-        // use the same settings.xml as the main build
-        buildCmd.add("-s");
-        buildCmd.add(System.getProperty("maven.settings"));
+
+        if (USE_CUSTOM_MAVEN_REPO) {
+            buildCmd.add("-Dmaven.repo.local=" + getLocalMavenRepoDir());
+        }
+        if (USE_MAIN_BUILD_SETTINGS) {
+            buildCmd.add("-s");
+            buildCmd.add(System.getProperty("maven.settings"));
+        }
 
         return Collections.unmodifiableList(buildCmd);
     }

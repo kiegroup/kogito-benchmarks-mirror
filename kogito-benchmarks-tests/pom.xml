@@ -19,6 +19,8 @@
     <!-- Framework -->
     <appsDir>apps-dir-needs-to-be-specified</appsDir>
     <archivedLogsDir>${project.basedir}/archived-logs</archivedLogsDir>
+    <useCustomMavenRepo>false</useCustomMavenRepo> <!-- Generated apps use their own .mvn/maven.config -->
+    <useMainBuildSettings>false</useMainBuildSettings>
 
     <!-- Test Suite -->
     <cpuAffinity>4</cpuAffinity> <!-- Positive number sets the CPU affinity explicitly -->
@@ -62,6 +64,8 @@
             <appsDir>${appsDir}</appsDir>
             <archivedLogsDir>${archivedLogsDir}</archivedLogsDir>
             <cpuAffinity>${cpuAffinity}</cpuAffinity>
+            <useCustomMavenRepo>${useCustomMavenRepo}</useCustomMavenRepo>
+            <useMainBuildSettings>${useMainBuildSettings}</useMainBuildSettings>
           </systemPropertyVariables>
         </configuration>
       </plugin>
