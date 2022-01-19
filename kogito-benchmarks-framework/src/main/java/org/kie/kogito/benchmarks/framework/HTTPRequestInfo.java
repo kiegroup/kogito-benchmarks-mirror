@@ -221,6 +221,36 @@ public class HTTPRequestInfo {
                 "    \"threshold_high\": 0\n" +
                 "  }\n" +
                 "}";
-    }
 
+        public static final String PMML_CLUSTERING = "{\n" +
+                "  \"sepal_length\": 7.9,\n" +
+                "  \"sepal_width\": 4.4,\n" +
+                "  \"petal_length\": 6.9,\n" +
+                "  \"petal_width\": 2.5\n" +
+                "}";
+
+        public static final String PMML_FOREST = "{\n" +
+                "  \"Age\": 21.0,\n" +
+                "  \"MonthlySalary\": 10000.0,\n" +
+                "  \"TotalAsset\": 10000.0,\n" +
+                "  \"TotalRequired\": 15000.0,\n" +
+                "  \"NumberInstallments\": 1.0\n" +
+                "}";
+
+        public static final String PMML_MINE = "{\n" +
+                "  \"temperature\": 30.0,\n" +
+                "  \"humidity\": 20.0\n" +
+                "}";
+
+        public static final String PMML_REGRESSION = "{\n" +
+                "  \"age\": 0,\n" +
+                "  \"salary\": 0,\n" +
+                "  \"car_location\": \"carpark\"\n" +
+                "}";
+
+        public static final String PMML_SCORECARD = "{\n" +
+                "  \"input1\": 0.0,\n" +
+                "  \"input2\": 0.0\n" +
+                "}";
+    }
 }

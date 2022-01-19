@@ -19,7 +19,9 @@ public enum URLContent {
     SMARTHOUSE_02(new String[][] { new String[] { "http://localhost:8080/heating", "name=\"heating\"" } }),
     SMARTHOUSE_03(new String[][] { new String[] { "http://localhost:8080/heating", "name=\"heating\"" } }),
     SMARTHOUSE_STP(new String[][] { new String[] { "http://localhost:8080/heating", "name=\"heating\"" },
-            new String[] { "http://localhost:8080/smartHouse", "[]" } });
+            new String[] { "http://localhost:8080/smartHouse", "[]" } }),
+    PMML_QUARKUS(new String[][] { new String[] { "http://localhost:8080/q/health/ready", "UP" } }),
+    PMML_SPRINGBOOT(new String[][] { new String[] { "http://localhost:8080/actuator/health", "UP" } });
 
     public final String[][] urlContent;
 

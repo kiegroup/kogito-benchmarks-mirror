@@ -27,7 +27,7 @@ public enum MvnCmds {
     }),
     SPRING_BOOT_JVM(new String[][] {
             new String[] { "mvn", "clean", "package" }, // The JAR name is unified by setting finalName in the kie-assets-library repo
-            new String[] { "java", Placeholders.JVM_ARGS, "-jar", "target/smarthouse.jar" }
+            new String[] { "java", Placeholders.JVM_ARGS, "-jar", "target/runner.jar" }
     }),
 
     // These are not used now but may be useful in the future
